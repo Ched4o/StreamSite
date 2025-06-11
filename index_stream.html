@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HibridStream | TV ao vivo, Filmes, Séries e muito mais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="description" content="HibridStream - Assista a canais ao vivo, filmes, séries, animes e muito mais em qualquer dispositivo. Planos acessíveis com suporte 24/7. iptv, p2p">
+    <meta name="keywords" content="streaming, TV ao vivo, filmes, séries, animes, novelas, entretenimento, aplicativo, p2p, iptv">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+        
+                /* Animação fadeIn */
+        @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fadeIn {
+        animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Ajuste do shine-effect para não cobrir conteúdo */
+        .shine-effect::after {
+        z-index: -1; /* Adicione esta linha */
+        }
+
+        /* Correção do glowing-border */
+        .glowing-border::after {
+        z-index: -1; /* Já existe no seu código, mas verifique se está funcionando */
+        }
+
+        /* Melhorias de responsividade */
+        @media (max-width: 640px) {
+        .hero-buttons {
+            flex-direction: column;
+        }
+        
+        .hero-buttons a {
+            width: 100%;
+        }
+        
+        .content-section .grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .pricing-section .grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .devices-section .grid {
+            grid-template-columns: 1fr 1fr;
+        }
+        }
+
+        /* Ajuste para evitar que o shine-effect cubra textos */
+        .shine-effect {
+        position: relative;
+        z-index: 1;
+        }
+
+        /* Melhor espaçamento para mobile */
+        @media (max-width: 768px) {
+        section {
+            padding: 3rem 1rem;
+        }
+        
+        .content-card, .pricing-card {
+            padding: 1.5rem;
+        }
+        }
+        
+        
+        .active-section {
+            color: white !important;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .active-section::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        .streamvibe-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .content-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+        }
+        
+        .pricing-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.25);
+        }
+        
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(30deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        
+        .shine-effect:hover::after {
+            opacity: 1;
+            top: 0;
+            left: 0;
+        }
+        
+        .glowing-border {
+            position: relative;
+        }
+        
+        .glowing-border::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899);
+            border-radius: 0.75rem;
+            z-index: -1;
+        }
+        
+        .device-shadow {
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));
+        }
+        
+        .device-platform {
+            transition: all 0.3s ease;
+        }
+        
+        .device-platform:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header & Navigation -->
+    <header class="bg-gradient-to-r from-gray-900 via-gray-900 to-slate-900 border-b border-slate-700 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 w-10 h-10 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-play-circle text-white text-xl"></i>
+                </div>
+                <h1 class="streamvibe-logo text-2xl font-bold">
+                    <span class="gradient-text">Hibrid</span><span class="text-white">Stream</span>
+                </h1>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#content" class="text-slate-300 hover:text-white font-medium">Conteúdo</a>
+                <a href="#pricing" class="text-slate-300 hover:text-white font-medium">Planos</a>
+                <a href="#devices" class="text-slate-300 hover:text-white font-medium">Dispositivos</a>
+                <a href="#contact" class="text-slate-300 hover:text-white font-medium">Contato</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <a href="https://wa.me/" target="_blank" class="p-2 rounded-full bg-green-500/20 hover:bg-green-500/30">
+                    <i class="fab fa-whatsapp text-green-400 text-xl"></i>
+                </a>
+                <a href="https://t.me/" target="_blank" class="p-2 rounded-full bg-blue-500/20 hover:bg-blue-500/30">
+                    <i class="fab fa-telegram text-blue-400 text-xl"></i>
+                </a>
+                <a href="https://instagram.com/" target="_blank" class="p-2 rounded-full bg-purple-500/20 hover:bg-purple-500/30">
+                    <i class="fab fa-instagram text-purple-400 text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 md:py-24 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-900 to-transparent"></div>
+            <div class="absolute inset-0 bg-grid-white/5"></div>
+            <div class="absolute top-0 right-0 bottom-0 w-1/2 bg-gradient-to-l from-indigo-900/30 to-transparent"></div>
+        </div>
+        
+        <div class="container mx-auto max-w-6xl relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                        <span class="block">Sua Diversão,</span>
+                        <span class="gradient-text">em qualquer lugar.</span>
+                    </h1>
+                    <p class="text-xl text-slate-300 mb-8 max-w-xl">
+                        Assista a tudo, quando quiser. Canais ao vivo, filmes, séries, animes, novelas e muito mais em um só lugar.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#" class="shine-effect bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 rounded-full font-bold text-white flex items-center justify-center gap-2 text-lg transition duration-300 hover:from-indigo-700 hover:to-purple-700">
+                            <i class="fab fa-android text-xl"></i> Baixar para Android
+                        </a>
+                        <a href="#" class="shine-effect bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-4 rounded-full font-bold text-white flex items-center justify-center gap-2 text-lg transition duration-300 hover:from-blue-700 hover:to-cyan-600">
+                            <i class="fab fa-apple text-xl"></i> Apple Store
+                        </a>
+                    </div>
+                    
+                    <div class="flex space-x-6 mt-8">
+                        <div class="flex items-center space-x-2 text-slate-300">
+                            <i class="fas fa-play-circle text-indigo-400"></i>
+                            <span>1000+ Filmes</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-slate-300">
+                            <i class="fas fa-tv text-pink-400"></i>
+                            <span>5000 Canais TV</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-slate-300">
+                            <i class="fas fa-globe-americas text-yellow-400"></i>
+                            <span>Em qualquer lugar</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="relative device-shadow">
+                        <div class="absolute -top-12 -left-10 w-64 h-64 bg-indigo-600 rounded-full filter blur-3xl opacity-30"></div>
+                        <div class="absolute -bottom-12 -right-10 w-80 h-80 bg-purple-600 rounded-full filter blur-3xl opacity-30"></div>
+                        <div class="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl overflow-hidden">
+                            <div class="h-6 bg-slate-800 border-b border-slate-700 flex items-center px-3">
+                                <div class="flex space-x-2">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative aspect-video bg-gradient-to-br from-gray-900 to-slate-900 overflow-hidden">
+                                <div class="absolute inset-0 grid grid-cols-5 grid-rows-5 gap-px">
+                                    <div class="bg-indigo-900/20"></div>
+                                    <div class="bg-purple-900/20"></div>
+                                    <div class="bg-blue-900/20"></div>
+                                    <div class="bg-pink-900/20"></div>
+                                    <div class="bg-cyan-900/20"></div>
+                                    <!-- More dynamic background elements -->
+                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="inline-flex items-center gap-3 mb-5">
+                                            <i class="fas fa-play-circle text-4xl text-white"></i>
+                                            <span class="streamvibe-logo text-3xl">
+                                                <span class="gradient-text">Hibrid</span><span class="text-white">Stream</span>
+                                            </span>
+                                        </div>
+                                        <h3 class="text-xl font-semibold text-white">Conectando você ao melhor entretenimento</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section id="content" class="py-16 md:py-24 bg-slate-800/30">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Conteúdo <span class="gradient-text">Ilimitado</span></h2>
+                <p class="text-slate-300 max-w-2xl mx-auto">
+                    Uma vasta biblioteca com tudo o que você precisa para se entreter, em qualquer lugar e a qualquer momento.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Live Channels -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-tv text-red-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Canais ao Vivo</h3>
+                    <p class="text-slate-300 text-sm">
+                        Mais de 5000 canais nacionais e internacionais em tempo real
+                    </p>
+                </div>
+                
+                <!-- Movies -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-indigo-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-film text-indigo-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Filmes</h3>
+                    <p class="text-slate-300 text-sm">
+                        Catálogo com os melhores filmes de todos os gêneros
+                    </p>
+                </div>
+                
+                <!-- Series -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-play-circle text-blue-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Séries</h3>
+                    <p class="text-slate-300 text-sm">
+                        Temporadas completas das séries mais populares
+                    </p>
+                </div>
+                
+                <!-- Animes -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mb-4">
+                        <i class="fab fa-napster text-purple-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Animes</h3>
+                    <p class="text-slate-300 text-sm">
+                        Coleção completa dos melhores animes japoneses
+                    </p>
+                </div>
+                
+                <!-- Cartoons -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-pink-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-dragon text-pink-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Desenhos</h3>
+                    <p class="text-slate-300 text-sm">
+                        Clássicos e novidades para todas as idades
+                    </p>
+                </div>
+                
+                <!-- Soap Operas -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-theater-masks text-yellow-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Novelas</h3>
+                    <p class="text-slate-300 text-sm">
+                        Novelas brasileiras e internacionais completas
+                    </p>
+                </div>
+                
+                <!-- Documentaries -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-globe-americas text-green-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Documentários</h3>
+                    <p class="text-slate-300 text-sm">
+                        Conteúdo educativo e informativo de qualidade
+                    </p>
+                </div>
+                
+                <!-- And More -->
+                <div class="content-card shine-effect glowing-border rounded-xl p-6 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-cyan-500/20 flex items-center justify-center mb-4">
+                        <i class="fas fa-plus-circle text-cyan-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">E muito mais!</h3>
+                    <p class="text-slate-300 text-sm">
+                        Descubra uma vasta variedade de entretenimento
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-16 md:py-24">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Planos <span class="gradient-text">Acessíveis</span></h2>
+                <p class="text-slate-300 max-w-2xl mx-auto">
+                    Escolha o plano ideal para você. Todos com transmissão em até 1 tela simultânea.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <!-- 1 Month Plan -->
+                <div class="pricing-card shine-effect rounded-xl p-8 relative">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-indigo-600/10 backdrop-blur rounded-bl-2xl flex items-center justify-center">
+                        <div class="text-center">
+                            <span class="block text-xs font-semibold">30</span>
+                            <span class="block font-bold">DIAS</span>
+                        </div>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Plano Mensal</h3>
+                        <div class="text-4xl font-bold gradient-text">R$30</div>
+                        <p class="text-slate-300">Acesso por 1 mês</p>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Todos os conteúdos liberados</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>1 tela simultânea</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Suporte 24/7</span>
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/" target="_blank" class="shine-effect block w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg text-center font-semibold hover:from-indigo-700 hover:to-indigo-800">
+                        Assinar via WhatsApp
+                    </a>
+                </div>
+                
+                <!-- 4 Months Plan -->
+                <div class="pricing-card shine-effect rounded-xl p-8 relative bg-gradient-to-b from-slate-900/60 to-slate-800/30 border border-indigo-900/50">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-indigo-700/30 backdrop-blur rounded-bl-2xl flex items-center justify-center">
+                        <div class="text-center">
+                            <span class="block text-xs font-semibold">120</span>
+                            <span class="block font-bold">DIAS</span>
+                        </div>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Plano Quadrimestre</h3>
+                        <div class="text-4xl font-bold gradient-text">R$100</div>
+                        <p class="text-slate-300">Economia de R$20</p>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Todos os conteúdos liberados</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>1 tela simultânea</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Suporte 24/7</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-star text-yellow-500 mr-3"></i>
+                            <span class="font-medium">Benefício de economia</span>
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/" target="_blank" class="shine-effect block w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg text-center font-semibold hover:from-purple-700 hover:to-indigo-800">
+                        Assinar via WhatsApp
+                    </a>
+                </div>
+                
+                <!-- 6 Months Plan -->
+                <div class="pricing-card shine-effect rounded-xl p-8 relative">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-purple-600/20 backdrop-blur rounded-bl-2xl flex items-center justify-center">
+                        <div class="text-center">
+                            <span class="block text-xs font-semibold">180</span>
+                            <span class="block font-bold">DIAS</span>
+                        </div>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Plano Semestral</h3>
+                        <div class="text-4xl font-bold gradient-text">R$150</div>
+                        <p class="text-slate-300">Super Economia de R$30</p>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Todos os conteúdos liberados</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>1 tela simultânea</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Suporte 24/7</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-star text-yellow-500 mr-3"></i>
+                            <span class="font-medium">Melhor relação custo-benefício</span>
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/" target="_blank" class="shine-effect block w-full py-3 bg-gradient-to-r from-pink-600 to-purple-700 rounded-lg text-center font-semibold hover:from-pink-700 hover:to-purple-800">
+                        Assinar via WhatsApp
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div class="mt-20 max-w-3xl mx-auto">
+                <h3 class="text-2xl font-bold text-center mb-8">Pagamento por:</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="shine-effect bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 rounded-xl bg-blue-500/10 flex items-center justify-center mb-3">
+                            <i class="fas fa-qrcode text-blue-400 text-2xl"></i>
+                        </div>
+                        <span class="font-semibold">PIX</span>
+                    </div>
+                    <div class="shine-effect bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-3">
+                            <span class="text-2xl font-bold text-cyan-400">P</span>
+                        </div>
+                        <span class="font-semibold">PicPay</span>
+                    </div>
+                    <div class="shine-effect bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 rounded-xl bg-yellow-500/10 flex items-center justify-center mb-3">
+                            <i class="fab fa-bitcoin text-yellow-400 text-2xl"></i>
+                        </div>
+                        <span class="font-semibold">Bitcoin</span>
+                    </div>
+                    <div class="shine-effect bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 rounded-xl bg-green-500/10 flex items-center justify-center mb-3">
+                            <i class="fas fa-dollar-sign text-green-400 text-2xl"></i>
+                        </div>
+                        <span class="font-semibold">USDT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Devices Section -->
+    <section id="devices" class="py-16 md:py-24 bg-gradient-to-b from-slate-900/40 to-slate-950">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Disponível em 
+                    <span class="gradient-text">todos os dispositivos</span>
+                </h2>
+                <p class="text-slate-300 max-w-2xl mx-auto">
+                    Assista no seu celular, tablet, TV ou computador com total qualidade.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <!-- Android -->
+                <div class="device-platform bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 flex flex-col items-center text-center">
+                    <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-green-500/10 to-green-700/10 flex items-center justify-center mb-6">
+                        <i class="fab fa-android text-green-400 text-5xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Android</h3>
+                    <p class="text-slate-300 mb-4">Celulares e Tablets</p>
+                    <a href="#" class="inline-block bg-green-600/20 hover:bg-green-600/40 rounded-lg px-4 py-2 transition-colors">
+                        Baixar APK
+                    </a>
+                </div>
+                
+                <!-- Android TV -->
+                <div class="device-platform bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 flex flex-col items-center text-center">
+                    <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-cyan-700/10 flex items-center justify-center mb-6">
+                        <i class="fas fa-tv text-cyan-400 text-5xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Android TV</h3>
+                    <p class="text-slate-300 mb-4">TVs e Chromecast</p>
+                    <a href="#" class="inline-block bg-cyan-600/20 hover:bg-cyan-600/40 rounded-lg px-4 py-2 transition-colors">
+                        Baixar APK
+                    </a>
+                </div>
+                
+                <!-- iOS -->
+                <div class="device-platform bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 flex flex-col items-center text-center">
+                    <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-700/10 flex items-center justify-center mb-6">
+                        <i class="fab fa-apple text-blue-400 text-5xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">iOS</h3>
+                    <p class="text-slate-300 mb-4">iPhone e iPad</p>
+                    <a href="#" class="inline-block bg-blue-600/20 hover:bg-blue-600/40 rounded-lg px-4 py-2 transition-colors">
+                        Apple Store
+                    </a>
+                </div>
+                
+                <!-- PC -->
+                <div class="device-platform bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 flex flex-col items-center text-center">
+                    <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-indigo-700/10 flex items-center justify-center mb-6">
+                        <i class="fas fa-laptop text-indigo-400 text-5xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Windows/Mac</h3>
+                    <p class="text-slate-300 mb-4">Computadores</p>
+                    <a href="#" class="inline-block bg-indigo-600/20 hover:bg-indigo-600/40 rounded-lg px-4 py-2 transition-colors">
+                        Instalar App
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-900/5 to-purple-900/5"></div>
+        <div class="container mx-auto px-4 max-w-4xl relative">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Fale <span class="gradient-text">conosco</span></h2>
+                <p class="text-slate-300 max-w-2xl mx-auto">
+                    Suporte rápido e dedicado para resolver qualquer dúvida.
+                </p>
+            </div>
+            
+            <div class="bg-slate-800/40 backdrop-blur border border-slate-700/50 rounded-2xl overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3">
+                    <!-- Whatsapp -->
+                    <a href="https://wa.me/" target="_blank" class="shine-effect group flex flex-col items-center text-center p-10 bg-gradient-to-b from-green-900/20 to-green-900/10 border-r border-slate-700/50 hover:from-green-900/30 hover:to-green-900/20">
+                        <div class="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mb-5 group-hover:bg-green-500/20 transition-colors">
+                            <i class="fab fa-whatsapp text-4xl text-green-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">WhatsApp</h3>
+                        <p class="text-slate-300 mb-4">Suporte instantâneo</p>
+                        <span class="text-green-400 font-medium flex items-center">
+                            Converse agora <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                        </span>
+                    </a>
+                    
+                    <!-- Telegram -->
+                    <a href="https://t.me/" target="_blank" class="shine-effect group flex flex-col items-center text-center p-10 bg-gradient-to-b from-blue-900/20 to-blue-900/10 border-r border-slate-700/50 hover:from-blue-900/30 hover:to-blue-900/20">
+                        <div class="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mb-5 group-hover:bg-blue-500/20 transition-colors">
+                            <i class="fab fa-telegram text-4xl text-blue-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Telegram</h3>
+                        <p class="text-slate-300 mb-4">Canal de comunicação</p>
+                        <span class="text-blue-400 font-medium flex items-center">
+                            Entrar no grupo <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                        </span>
+                    </a>
+                    
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/" target="_blank" class="shine-effect group flex flex-col items-center text-center p-10 bg-gradient-to-b from-purple-900/20 to-purple-900/10 hover:from-purple-900/30 hover:to-purple-900/20">
+                        <div class="w-20 h-20 rounded-full bg-purple-500/10 flex items-center justify-center mb-5 group-hover:bg-purple-500/20 transition-colors">
+                            <i class="fab fa-instagram text-4xl text-purple-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Instagram</h3>
+                        <p class="text-slate-300 mb-4">Novidades e promoções</p>
+                        <span class="text-purple-400 font-medium flex items-center">
+                            Siga-nos <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-12 bg-slate-800/40 backdrop-blur border border-slate-700/50 rounded-2xl p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <h3 class="text-xl font-bold">Dúvidas? Estamos aqui para ajudar!</h3>
+                        <p class="text-slate-300">Entre em contato pelos nossos canais de comunicação para suporte personalizado.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="https://wa.me/" target="_blank" class="w-14 h-14 rounded-full bg-green-500/20 flex items-center justify-center hover:bg-green-500/30 transition-colors">
+                            <i class="fab fa-whatsapp text-green-400 text-2xl"></i>
+                        </a>
+                        <a href="https://t.me/" target="_blank" class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center hover:bg-blue-500/30 transition-colors">
+                            <i class="fab fa-telegram text-blue-400 text-2xl"></i>
+                        </a>
+                        <a href="https://instagram.com/" target="_blank" class="w-14 h-14 rounded-full bg-purple-500/20 flex items-center justify-center hover:bg-purple-500/30 transition-colors">
+                            <i class="fab fa-instagram text-purple-400 text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-12">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="bg-indigo-600 w-12 h-12 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-play-circle text-white text-2xl"></i>
+                        </div>
+                        <h2 class="streamvibe-logo text-2xl font-bold">
+                            <span class="gradient-text">Hibrid</span><span class="text-white">Stream</span>
+                        </h2>
+                    </div>
+                    <p class="text-slate-400 max-w-xs">
+                        O melhor entretenimento na palma da sua mão, com variedade e qualidade incomparáveis.
+                    </p>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Links</h3>
+                            <ul class="space-y-3">
+                                <li><a href="#content" class="text-slate-400 hover:text-white transition-colors">Conteúdo</a></li>
+                                <li><a href="#pricing" class="text-slate-400 hover:text-white transition-colors">Planos</a></li>
+                                <li><a href="#devices" class="text-slate-400 hover:text-white transition-colors">Dispositivos</a></li>
+                                <li><a href="#contact" class="text-slate-400 hover:text-white transition-colors">Contato</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Contato</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fab fa-whatsapp text-green-400 mr-3"></i>
+                                    <a href="https://wa.me/" target="_blank" class="text-slate-400 hover:text-white transition-colors">WhatsApp</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-telegram text-blue-400 mr-3"></i>
+                                    <a href="https://t.me/" target="_blank" class="text-slate-400 hover:text-white transition-colors">Telegram</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fab fa-instagram text-purple-400 mr-3"></i>
+                                    <a href="https://instagram.com/" target="_blank" class="text-slate-400 hover:text-white transition-colors">Instagram</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-slate-500 text-sm">© 2023 HibridStream. Todos os direitos reservados.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="https://wa.me/" target="_blank" class="text-slate-500 hover:text-green-400 transition-colors">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://t.me/" target="_blank" class="text-slate-500 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="https://instagram.com/" target="_blank" class="text-slate-500 hover:text-purple-400 transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Highlight active section in navigation
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+    
+    function updateActiveSection() {
+        let current = '';
+        const scrollPosition = window.pageYOffset + 200;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active-section');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active-section');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateActiveSection);
+    document.addEventListener('DOMContentLoaded', updateActiveSection);
+
+    // Enhanced animation on scroll
+    const animateOnScroll = () => {
+        const elements = document.querySelectorAll(
+            'section, .content-card, .pricing-card, .device-platform'
+        );
+        
+        elements.forEach(el => {
+            el.classList.add('opacity-0', 'transition-all', 'duration-700', 'ease-out');
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('opacity-0');
+                    entry.target.classList.add('opacity-100');
+                }
+            });
+        }, observerOptions);
+
+        elements.forEach(el => {
+            observer.observe(el);
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', animateOnScroll);
+    window.addEventListener('load', animateOnScroll);
+</script>
+</body>
+</html>
